@@ -5,7 +5,7 @@
 \title{History Lab API - Date search}
 \usage{
 hlapi_date(date=NULL,start.date=NULL,end.date=NULL,fields=NULL,coll.name=NULL,
-limit = 25,run=FALSE,...)
+limit = 25,run=TRUE,...)
 }
 \arguments{
 \item{date}{Specific date to search}
@@ -20,7 +20,7 @@ limit = 25,run=FALSE,...)
 
 \item{limit}{Number of results to return (Default = 25)}
 
-\item{run}{Run query or return API URL only (Default)}
+\item{run}{Run query (Default) or return API URL only}
 
 \item{...}{Not used}
 }
@@ -32,9 +32,7 @@ This program allows a date or date range search using the History Lab API.
 Options to limit the results include collection and fields.
 }
 \examples{
-hlapi_date(date='1980-09-15', fields=c("doc_id","classification","title"),
-coll.name="frus", run=TRUE)
-hlapi_date(start.date='1947-01-01', end.date='12/01/1948', limit=100,run=TRUE)
-hlapi_date(start.date='1947-01-01', end.date='12/01/1948',
-fields=c("doc_id","classification","title", "persons"), limit=10,run=TRUE)
+hlapi_date(date='1980-09-15', fields=c("doc_id","classification","title"), coll.name="frus")
+hlapi_date(start.date='1947-01-01', end.date='12/01/1948', limit=100)
+hlapi_date(start.date='1947-01-01', end.date='12/01/1948', fields=c("doc_id","classification","title", "entities"), limit=10)
 }

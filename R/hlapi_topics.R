@@ -1,21 +1,23 @@
-#' @title History Lab API - Entity search
-#' @name hlapi_entity
+#' @title History Lab API - Topics search
+#' @name hlapi_topics
 #' @description
 #'
-#' This program allows a search of the History Lab API by entity.
+#' This program allows a search of the History Lab API by topic.
+#' Because topics are unique to collections, the function should be used with specific collections.
+#'
 #'
 #' @usage
-#' hlapi_entity( entity.value, fields=NULL, coll.name=NULL,
-#' date=NULL,start.date=NULL, end.date=NULL, or=FALSE, run=TRUE, limit = 25, ...)
+#' hlapi_topics( topics.value, fields=NULL, coll.name=NULL,
+#' date=NULL,start.date=NULL, end.date=NULL, or=TRUE, run=TRUE, limit = 25, ...)
 #'
-#' @param entity.value The entity Wikidata ID to be searched
+#' @param topics.value The topic ID value to be searched
 #' @param fields Specific History Lab fields to return
 #' @param coll.name History Lab collection to search
 #' @param date Specific date to search
 #' @param start.date Date range for the search
 #' @param end.date Date range for the search
 #' @param limit Number of results to return (Default = 25)
-#' @param or Join entity list with 'or' rather than 'and'
+#' @param or Join topics list with 'or' (Default) rather than 'and'
 #' @param run Run query (Default) or return API URL only
 #' @param ... Not used
 #'
@@ -25,25 +27,27 @@
 
 #require(jsonlite)
 #source('R/histlabapi_utils.R')
-# find.entity.id('Belize') # Belize Wikidata ID is Q242
-# hlapi_entity(entity.value='Q242', coll.name='frus')
-# find.entity.id('Nixon') # RMN Wikidata ID is Q9588
-# hlapi_entity(entity.value="Q9588", coll.name='frus')
+# find.topics.id('nuclear') # nuclear topic ID is 78 in frus
+# hlapi_topics(topics.value='78', coll.name='frus')
+# find.topics.id('import') # topic ID 56 in WB
+# find.topics.id('invest') # topic ID 51 in WB
+# hlapi_topics(topics.value=c("51","56"), coll.name='worldbank', fields=c('doc_id','title','authored','topic_names'), or=FALSE)
 
-hlapi_entity<-function(entity.value=NULL, fields=NULL,coll.name=NULL,date=NULL,start.date=NULL,
-                       end.date=NULL,or=FALSE, run=TRUE, limit = 25,...){
+hlapi_topics<-function(topics.value=NULL, fields=NULL,coll.name=NULL,date=NULL,start.date=NULL,
+                       end.date=NULL,or=TRUE, run=TRUE, limit = 25,...){
   url<-"http://api.foiarchive.org/"
   #search<-NULL
-  if(missing(entity.value)){
-    stop("Please supply an entity value")
+  if(missing(topics.value)){
+    stop("Please supply a topic value")
   }
 
-  # Prepare entity value
-  notice<-ck_wikidata(entity.value)
-  entity.value<-config.ent(entity.value)
+  # Prepare topic value
+  notice<-ck_topics(topics.value)
+  topics.value<-config.topics(topics.value)
+
   # Prepare OR list
   ors<-ifelse(or==TRUE,'ov', 'cs')
-  search <- paste0("documents?wikidata_ids=", ors, ".{", entity.value, "}")
+  search <- paste0("documents?topic_ids=", ors, ".{", topics.value, "}")
 
   url<-paste0(url,search)
 
@@ -88,7 +92,7 @@ hlapi_entity<-function(entity.value=NULL, fields=NULL,coll.name=NULL,date=NULL,s
   if(run){
     return(jsonlite::fromJSON(url))
   }
-    return(url)
+  return(url)
 }
 
 

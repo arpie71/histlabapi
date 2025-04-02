@@ -1,12 +1,11 @@
-Package: histlabapi2
+Package: histlabapi
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: R package to interact with the History Lab API
+Version: 1.0.0
+Author: History Lab
+Maintainer: Raymond Hicks <rh2883@columbia.edu>
+Description: This package allows users to send calls and obtain data from the History Lab API.
+License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 Imports: jsonlite

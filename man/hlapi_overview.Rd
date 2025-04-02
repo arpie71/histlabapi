@@ -4,27 +4,21 @@
 \alias{hlapi_overview}
 \title{History Lab API - Overview}
 \usage{
-hlapi_overview(collections=FALSE, fields=FALSE, sort = NULL,  coll.name=NULL,
-entity.type=NULL, start.date=NULL, end.date=NULL, limit=25, run=FALSE,...)
+hlapi_overview(aspect=NULL,  sort = NULL,  coll.name=NULL,
+entity.type=NULL, limit=250, run=TRUE,...)
 }
 \arguments{
-\item{collections}{Show collections or overview of collections}
-
-\item{fields}{Show the possible fields}
+\item{aspect}{Type of overview}
 
 \item{sort}{Sort in (A)scending or (D)escending order. Default = No sort}
 
 \item{coll.name}{History Lab collection to search}
 
-\item{entity.type}{Entity type to return (topics, persons, or countries)}
+\item{entity.type}{Entity type to return (PERSON, ORG, LOC, GOVT, and OTHER)}
 
-\item{start.date}{Start date for a top entity search}
+\item{limit}{Number of results to return (Default = 250)}
 
-\item{end.date}{End date for a top entity search}
-
-\item{limit}{Number of results to return (Default = 25)}
-
-\item{run}{Run query or return API URL only (Default)}
+\item{run}{Run query (Default) or return API URL only}
 
 \item{...}{Not used}
 }
@@ -33,14 +27,15 @@ Returns a json object (if run = TRUE) or API URL (if run=FALSE)
 }
 \description{
 This function allows an overview query of the History Lab API.
-It will provide a list of fields and collections available to search as well as an overview of the entities in a collection.
-If an entity type is mentioned but a date range is not specified using start.date and end.date, the function will return entities across the entire collection.
+It will provide a list of fields and collections available to search as well as an overview of the entities and topics  in a collection.
+
 
 Options to limit the results include collection and limit.
 }
 \examples{
-hlapi_overview(collections=TRUE, run=TRUE)
-hlapi_overview(coll.name='frus', entity.type = 'persons', sort = "D", run =TRUE)
-hlapi_overview(coll.name='frus', entity.type = 'countries', run=TRUE)
+hlapi_overview(aspect='collections')
+hlapi_overview(aspect='entities', entity.type = 'PERSON', sort = "D")
+hlapi_overview(aspect='topics',coll.name='frus')
+hlapi_overview(aspect='topics',coll.name='frus', run=FALSE)
 
 }

@@ -4,18 +4,11 @@
 \alias{hlapi_entity}
 \title{History Lab API - Entity search}
 \usage{
-hlapi_entity(entity.type=c('topics','persons','countries'), country.value, topic.value,
-person.value, fields=NULL, coll.name=NULL,date=NULL,start.date=NULL, end.date=NULL,
-summary= FALSE, orlist, run=NULL, limit = 25, ...)
+hlapi_entity( entity.value, fields=NULL, coll.name=NULL,
+date=NULL,start.date=NULL, end.date=NULL, or=FALSE, run=TRUE, limit = 25, ...)
 }
 \arguments{
-\item{entity.type}{The type of entity to search (countries, topics, and/or persons)}
-
-\item{country.value}{The specific country entity to be searched}
-
-\item{topic.value}{The specific topic entity to be searched}
-
-\item{person.value}{The specific person entity to be searched}
+\item{entity.value}{The entity Wikidata ID to be searched}
 
 \item{fields}{Specific History Lab fields to return}
 
@@ -27,11 +20,9 @@ summary= FALSE, orlist, run=NULL, limit = 25, ...)
 
 \item{end.date}{Date range for the search}
 
-\item{summary}{Aggregate the results by entity.type (Default = FALSE)}
+\item{or}{Join entity list with 'or' rather than 'and'}
 
-\item{orlist}{Join entity list with 'or' rather than 'and'}
-
-\item{run}{Run query or return API URL only (Default)}
+\item{run}{Run query (Default) or return API URL only}
 
 \item{limit}{Number of results to return (Default = 25)}
 
@@ -41,5 +32,5 @@ summary= FALSE, orlist, run=NULL, limit = 25, ...)
 Returns a json object (if run = TRUE) or API URL (if run=FALSE)
 }
 \description{
-This program allows a search of the History Lab API by type of entity (countries, topics, or persons).
+This program allows a search of the History Lab API by entity.
 }

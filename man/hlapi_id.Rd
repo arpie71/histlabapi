@@ -4,14 +4,14 @@
 \alias{hlapi_id}
 \title{History Lab API - Search by ID or IDs}
 \usage{
-hlapi_id(ids=NULL, fields=NULL, run = NULL,...)
+hlapi_id(ids=NULL, fields=NULL, run = TRUE,...)
 }
 \arguments{
 \item{ids}{ID or list of IDs to search for}
 
 \item{fields}{Specific History Lab fields to return}
 
-\item{run}{Run query or return API URL only (Default)}
+\item{run}{Run query (Default) or return API URL only}
 
 \item{...}{Not used}
 }
@@ -24,12 +24,7 @@ Neither the date nor the collection parameters are accepted.
 If an ID is not in the History Lab database, the function will not return results for that ID.
 }
 \examples{
-hlapi_id(ids='frus1969-76ve05p1d11', fields = c('doc_id','body','title',"persons")
-,  run = TRUE)
-hlapi_id(ids='frus1969-76ve05p1d11', fields = c('doc_id','body','title',
-"topics","countries"), run = TRUE)
-hlapi_id(ids=c('frus1969-76ve05p1d11','frus1958-60v03d44'),
-fields = c('doc_id','body','title'), run=TRUE)
-hlapi_id(ids=c('frus1969-76ve05p1d11','frus1958-60v03d44'),
-fields = c('doc_id','body','title',"topics","countries"), run=TRUE)
+hlapi_id(ids='frus1969-76ve05p1d11', fields = c('doc_id','body','title',"entities"))
+hlapi_id(ids='frus1969-76ve05p1d11', fields = c('doc_id','title',"topic_titles","entities"))
+hlapi_id(ids=c('frus1969-76ve05p1d11','frus1958-60v03d45'), fields = c('doc_id','body','title'))
 }

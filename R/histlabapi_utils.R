@@ -1,46 +1,72 @@
 
 '%ni%'<-Negate('%in%')
 
-ck_fields<-function(fields){
-  #' This function checks to make sure that the fields listed are correct
-  #' And it gets the field list ready to send to API endpoint
+ck_fields <- function(fields) {
+  #' Check and validate fields before sending to API endpoint
   #' @param fields List of fields to check
-  #' Note: right now fields are hard-coded but will be moved to configuration file
+  #' @return Error message if invalid fields are found, otherwise NULL
 
-  field.list<-c("authored","body","body_html","body_summary","chapt_title","countries","collection","date","date_year","date_month","from_field","doc_id","location","nuclear","persons","topics","classification","refs","cable_references","source","source_path","cable_type","subject","title","to_field","tags","description","category","pdf","title_docview","orighand","concepts","type","office","readability","persons","countries","person_ids")
-  n<-NULL
-  for(f in fields){
-    if(f %ni% field.list){
-      if(is.null(n)) n<-f else n<-paste(n,f, sep=',')
-    }
+  valid_fields <- c("authored", "body", "wikidata_ids", "entgroups", "entities", "topic_titles", "topic_names", "topic_scores", "topic_ids", "title", "classification", "corpus", "doc_id")
+
+  invalid_fields <- setdiff(fields, valid_fields)
+
+  if (length(invalid_fields) > 0) {
+    verb <- ifelse(length(invalid_fields) > 1, "are", "is")
+    return(paste("Field Error:", paste(invalid_fields, collapse = ','), verb, "not valid"))
   }
-  notice<-NULL
-  if(!is.null(n)){
-    if(grepl(",",n)) verb<-"are" else verb<-"is"
-    notice<-paste("Field Error:", n,verb,"not valid")
-  }
-  return(notice)
+
+  return(NULL)
 }
+
+fmt_fields<-function(url,fields){
+  #' Format fields for API request
+  #' @param url Base API URL
+  #' @param fields List of fields to include
+
+  if(is.null(fields)){
+    fields<- c('doc_id','authored','title')
+  }
+  # Check fields if fields entered
+  if(!is.null(fields)){
+    fields<-ck_list(fields)
+    f<-ck_fields(fields)
+    if(!is.null(f)) stop(f)
+  }
+  url<-paste0(url,"&select=",paste(unlist(fields), collapse=','))
+  return(url)
+}
+
 
 ck_list<-function(x) {
   #' This function will ensure a valid format for options that allow multiple values such as collections, ids, fields
   #' @param x Object to check
   #'
   if(length(x)==1){
-    x<-gsub(',\\s+',',',x)
-    x<-gsub('\\s+',',',x)
+    #x<-gsub(',\\s+',',',x)
+    #x<-gsub('\\s+',',',x)
+    x<-gsub('\\s+','',x)
     x<-as.list(strsplit(x,",")[[1]])
   }
   return(x)
 }
 
+fmt_collnames<-function(url,coll.name){
+  #' This function formats the collection names option when it is specified
+  #' @param url API URL
+  #' @param coll.name Name of collection or list of names of collections
+  coll.name<-ck_list(coll.name)
+  f<-ck_collections(coll.name)
+  if(!is.null(f)) stop(f)
+  if(length(coll.name)>1) url<-paste0(url,"&corpus=in.(",paste(unlist(coll.name), collapse=','),")") else url<-paste0(url,"&corpus=eq.",coll.name)
+  return(url)
+}
 
 ck_collections<-function(collections){
   #' This function checks to make sure that the collections listed are correct
   #' @param collections List of collections to check
   #' Note: right now collections are hard-coded but will be moved to configuration file
 
-  collection.list<-c("cpdoc","clinton","kissinger","cfpf","frus","ddrs","cabinet","briefing","worldbank")
+  collection.list<-c("frus","cia","clinton","briefing","cfpf","kissinger","nato","un","worldbank","cabinet","cpdoc")
   n<-NULL
   for(c in collections){
     if(c %ni% collection.list){
@@ -120,30 +146,6 @@ hlresults<-function(url){
 }
 
 
-ck_entities<-function(url,entity.type) {
-  #' This function will makes sure a valid entity is given
-  #' @param url URL to pass back with entity.type info added
-  #' @param entity.type Object to check
-  #'
-  for(i in 1:length(entity.type)){
-    if(entity.type[i] %ni% c("countries", "persons", "topics")){
-      notice <- "Acceptable entities are countries, topics, and/or persons"
-      stop(notice, call.=FALSE)
-    }
-    if(entity.type[i]=="topics"){
-      url<-paste(url,"topics.topic_name", sep=',')
-    }
-    if(entity.type[i]=="countries"){
-      url<-paste(url,"countries.country_name", sep=',')
-    }
-    if(entity.type[i]=="persons"){
-      url<-paste(url,"persons.full_name", sep=',')
-    }
-
-  }
-  return(url)
-}
-
 configsearch<-function(s.text, or){
   #' This function configures the search text to make it compatible with the API
   #' @param s.text The text or list of texts to search
@@ -164,6 +166,8 @@ configsearch<-function(s.text, or){
   return(slist)
 }
 
+
+### ENTITIES
 config.ent<-function(entity.value){
   #' This function configures the entity values to make it compatible with the API
   #' @param entity.value The text or list of entities to search
@@ -180,18 +184,85 @@ config.ent<-function(entity.value){
 find.entity.id<-function( value=NULL) {
   #' This function finds the API listing for a specific entity
   #' @param value The name or names of the entity to search
-  search<-NULL
-  notice<-NULL
   url<-"http://api.foiarchive.org/"
 
   if(missing(value)){
-    notice <- "Please supply a value for the entity"
-    stop(notice)
+    stop("Please supply a value for the entity", call.=FALSE)
   }
-  if(is.null(search)) search<-paste0("entities?entity=ilike.*",value,"*&select=entity,entgroup,wikidata_id,doc_cnt")
+  search<-paste0("entities?entity=ilike.*",value,"*&select=entity,entgroup,wikidata_id,doc_cnt")
 
   url<-paste0(url,search)
-
+  url <- paste0(url, "&order=doc_cnt.desc")
   return(hlresults(url))
 }
 
+ck_wikidata<-function(entity.values){
+  #' This function will makes sure a valid entity is given
+  #' @param entity.values Wikidata ID to validate
+  #'
+  notice<-NULL
+  for(i in 1:length(entity.values)){
+    if(!grepl("Q\\d+$",entity.values[i])){
+      notice <- "Wikidata ID is not properly formatted"
+    }
+  }
+  return(notice)
+}
+
+ck_entities<-function(url,entity.type) {
+  #' This function will makes sure a valid entity is given
+  #' @param url URL to pass back with entity.type info added
+  #' @param entity.type Object to check
+  #'
+  valid_entities <- c("PERSON", "ORG", "LOC", "GOVT", "OTHER")
+
+  if (any(entity.type %ni% valid_entities)) {
+    stop("Acceptable entities are PERSON, ORG, LOC, GOVT, OTHER", call. = FALSE)
+  }
+  if(length(entity.type)>1) url<-paste0(url,"&entgroup=in.(",paste(unlist(entity.type), collapse=','),")") else url<-paste0(url,"&entgroup=eq.",entity.type)
+  url<-paste0(url,"&select=entity,entgroup,wikidata_id,doc_cnt")
+  return(url)
+}
+
+
+## TOPICS
+
+config.topics<-function(topics.value){
+  #' This function configures the topics values to make it compatible with the API
+  #' @param topics.value The text or list of topics to search
+
+  topicslist<-""
+  for(i in 1:length(topics.value)) {
+    topicslist<- ifelse(length(grep("\\s+",topics.value[i]))>0, paste0(topicslist,gsub("\\s+","%20",topics.value[i]),sep=","), paste0(topicslist,topics.value[i],sep=","))
+  }
+  topicslist<-gsub(",$","",topicslist)
+  return(topicslist)
+}
+
+
+find.topics.id<-function( value=NULL) {
+  #' This function finds the API listing for a topic containing a term
+  #' @param value The name or names of the entity to search
+  url<-"http://api.foiarchive.org/"
+
+  if(missing(value)){
+    stop("Please supply a value for the topic")
+  }
+  search<-paste0("topics?name=ilike.*",value,"*&select=corpus,topic_id,title,name")
+
+  url<-paste0(url,search)
+  return(hlresults(url))
+}
+
+ck_topics<-function(topics.values){
+  #' This function will makes sure a valid entity is given
+  #' @param topics.values Topic IDs to validate
+  #'
+  notice<-NULL
+  for(i in 1:length(topics.values)){
+    if(!grepl("^\\d+$",topics.values[i])){
+      notice <- "Topics ID is not properly formatted"
+    }
+  }
+  return(notice)
+}

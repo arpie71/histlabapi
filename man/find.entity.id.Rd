@@ -4,11 +4,9 @@
 \alias{find.entity.id}
 \title{This function finds the API listing for a specific entity}
 \usage{
-find.entity.id(entity.type, value = NULL)
+find.entity.id(value = NULL)
 }
 \arguments{
-\item{entity.type}{The type of entity to search}
-
 \item{value}{The name or names of the entity to search}
 }
 \description{

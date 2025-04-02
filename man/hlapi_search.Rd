@@ -5,7 +5,7 @@
 \title{History Lab API - Full text search}
 \usage{
 hlapi_search(s.text, fields=NULL, or = FALSE, start.date=NULL,end.date=NULL,
-coll.name=NULL, limit = 25,run=NULL,...)
+coll.name=NULL, limit = 25,run=TRUE,...)
 }
 \arguments{
 \item{s.text}{Text to search--can be a single word, multiword phrase, or multiple variants}
@@ -22,7 +22,7 @@ coll.name=NULL, limit = 25,run=NULL,...)
 
 \item{limit}{Number of results to return (Default = 25)}
 
-\item{run}{Run query or return API URL only (Default)}
+\item{run}{Run query (Default) or return API URL only}
 
 \item{...}{Not used}
 }
@@ -34,11 +34,11 @@ This program allows a full text search using the History Lab API.
 In addition to a search term, collection and start.date and end.date are required fields.
 }
 \examples{
-hlapi_search('asean', collection=c('statedeptcables','frus'),
-start.date="1974-01-01", end.date="1979-12-31",run=TRUE)
+hlapi_search('asean', coll.name=c('cfpf','frus'),
+start.date="1974-01-01", end.date="1979-12-31")
 \dontrun{
 hlapi_search(c('udeac','asean'), run=TRUE)
 }
-hlapi_search(c('udeac','asean'), or=TRUE, run=TRUE)
-hlapi_search(c('league of nations'),  limit = 10, fields=c('doc_id','title'), run=TRUE)
+hlapi_search(c('udeac','asean'), or=TRUE)
+hlapi_search(c('league of nations'),  limit = 10, fields=c('doc_id','title'))
 }

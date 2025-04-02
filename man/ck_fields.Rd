@@ -2,16 +2,16 @@
 % Please edit documentation in R/histlabapi_utils.R
 \name{ck_fields}
 \alias{ck_fields}
-\title{This function checks to make sure that the fields listed are correct
-And it gets the field list ready to send to API endpoint}
+\title{Check and validate fields before sending to API endpoint}
 \usage{
 ck_fields(fields)
 }
 \arguments{
-\item{fields}{List of fields to check
-Note: right now fields are hard-coded but will be moved to configuration file}
+\item{fields}{List of fields to check}
+}
+\value{
+Error message if invalid fields are found, otherwise NULL
 }
 \description{
-This function checks to make sure that the fields listed are correct
-And it gets the field list ready to send to API endpoint
+Check and validate fields before sending to API endpoint
 }
