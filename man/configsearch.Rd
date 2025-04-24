@@ -14,3 +14,4 @@ configsearch(s.text, or)
 \description{
 This function configures the search text to make it compatible with the API
 }
+\keyword{internal}

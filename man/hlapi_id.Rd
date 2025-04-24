@@ -19,12 +19,12 @@ hlapi_id(ids=NULL, fields=NULL, run = TRUE,...)
 Returns a json object (if run = TRUE) or API URL (if run=FALSE)
 }
 \description{
-This program returns a list of random IDs from across the collections.
+This program returns data for a document ID or list of document IDs.
 Neither the date nor the collection parameters are accepted.
 If an ID is not in the History Lab database, the function will not return results for that ID.
 }
 \examples{
 hlapi_id(ids='frus1969-76ve05p1d11', fields = c('doc_id','body','title',"entities"))
-hlapi_id(ids='frus1969-76ve05p1d11', fields = c('doc_id','title',"topic_titles","entities"))
+hlapi_id(ids='frus1969-76ve05p1d11', fields = c('doc_id','title',"topic_names","entities"))
 hlapi_id(ids=c('frus1969-76ve05p1d11','frus1958-60v03d45'), fields = c('doc_id','body','title'))
 }

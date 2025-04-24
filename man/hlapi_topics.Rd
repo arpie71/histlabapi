@@ -35,3 +35,11 @@ Returns a json object (if run = TRUE) or API URL (if run=FALSE)
 This program allows a search of the History Lab API by topic.
 Because topics are unique to collections, the function should be used with specific collections.
 }
+\examples{
+find.topics.id('nuclear') # nuclear topic ID is 78 in frus
+hlapi_topics(topics.value='78', coll.name='frus')
+find.topics.id('import') # topic ID 56 in WB
+find.topics.id('invest') # topic ID 51 in WB
+hlapi_topics(topics.value=c("51","56"), coll.name='worldbank', fields=c('doc_id','title','authored','topic_names'), or=FALSE)
+
+}

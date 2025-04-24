@@ -4,9 +4,10 @@
 ck_fields <- function(fields) {
   #' Check and validate fields before sending to API endpoint
   #' @param fields List of fields to check
+  #' @keywords internal
   #' @return Error message if invalid fields are found, otherwise NULL
 
-  valid_fields <- c("authored", "body", "wikidata_ids", "entgroups", "entities", "topic_titles", "topic_names", "topic_scores", "topic_ids", "title", "classification", "corpus", "doc_id")
+  valid_fields <- c("authored", "body", "wikidata_ids", "entgroups", "entities", "topic_names", "topic_scores", "topic_ids", "title", "classification", "corpus", "doc_id")
 
   invalid_fields <- setdiff(fields, valid_fields)
 
@@ -22,6 +23,7 @@ fmt_fields<-function(url,fields){
   #' Format fields for API request
   #' @param url Base API URL
   #' @param fields List of fields to include
+  #' @keywords internal
 
   if(is.null(fields)){
     fields<- c('doc_id','authored','title')
@@ -40,6 +42,7 @@ fmt_fields<-function(url,fields){
 ck_list<-function(x) {
   #' This function will ensure a valid format for options that allow multiple values such as collections, ids, fields
   #' @param x Object to check
+  #' @keywords internal
   #'
   if(length(x)==1){
     #x<-gsub(',\\s+',',',x)
@@ -54,6 +57,8 @@ fmt_collnames<-function(url,coll.name){
   #' This function formats the collection names option when it is specified
   #' @param url API URL
   #' @param coll.name Name of collection or list of names of collections
+  #' @keywords internal
+
   coll.name<-ck_list(coll.name)
   f<-ck_collections(coll.name)
   if(!is.null(f)) stop(f)
@@ -64,6 +69,7 @@ fmt_collnames<-function(url,coll.name){
 ck_collections<-function(collections){
   #' This function checks to make sure that the collections listed are correct
   #' @param collections List of collections to check
+  #' @keywords internal
   #' Note: right now collections are hard-coded but will be moved to configuration file
 
   collection.list<-c("frus","cia","clinton","briefing","cfpf","kissinger","nato","un","worldbank","cabinet","cpdoc")
@@ -85,6 +91,7 @@ ck_date<-function(dates){
   #' This function checks that dates are correctly formatted
   #' And it converts dates to a standard format
   #' @param dates List of dates to check
+  #' @keywords internal
   notice<-NULL
   #convert date to Y-M-D format
   d<-strsplit(dates,"(/|-|\\.)")
@@ -138,7 +145,7 @@ ck_date<-function(dates){
 hlresults<-function(url){
   #' This function sends a request to the HL API
   #' @param url API URL address to call
-
+  #' @keywords internal
   u<-try(jsonlite::fromJSON(url), silent=TRUE)
   if("try-error" %in% class(u)) stop("Problem with query")
   if(!length(u)) stop("No results found", call.=FALSE)
@@ -150,7 +157,7 @@ configsearch<-function(s.text, or){
   #' This function configures the search text to make it compatible with the API
   #' @param s.text The text or list of texts to search
   #' @param or Whether to join text with 'or' or with 'and'
-  #'
+  #' @keywords internal
   search <-""
   slist = ""
   if(length(grep("\\s+",s.text))>0) {
@@ -171,7 +178,7 @@ configsearch<-function(s.text, or){
 config.ent<-function(entity.value){
   #' This function configures the entity values to make it compatible with the API
   #' @param entity.value The text or list of entities to search
-
+  #' @keywords internal
   entlist<-""
   for(i in 1:length(entity.value)) {
     entlist<- ifelse(length(grep("\\s+",entity.value[i]))>0, paste0(entlist,gsub("\\s+","%20",entity.value[i]),sep=","), paste0(entlist,entity.value[i],sep=","))
@@ -199,6 +206,7 @@ find.entity.id<-function( value=NULL) {
 ck_wikidata<-function(entity.values){
   #' This function will makes sure a valid entity is given
   #' @param entity.values Wikidata ID to validate
+  #' @keywords internal
   #'
   notice<-NULL
   for(i in 1:length(entity.values)){
@@ -213,7 +221,7 @@ ck_entities<-function(url,entity.type) {
   #' This function will makes sure a valid entity is given
   #' @param url URL to pass back with entity.type info added
   #' @param entity.type Object to check
-  #'
+  #' @keywords internal
   valid_entities <- c("PERSON", "ORG", "LOC", "GOVT", "OTHER")
 
   if (any(entity.type %ni% valid_entities)) {
@@ -230,7 +238,7 @@ ck_entities<-function(url,entity.type) {
 config.topics<-function(topics.value){
   #' This function configures the topics values to make it compatible with the API
   #' @param topics.value The text or list of topics to search
-
+  #' @keywords internal
   topicslist<-""
   for(i in 1:length(topics.value)) {
     topicslist<- ifelse(length(grep("\\s+",topics.value[i]))>0, paste0(topicslist,gsub("\\s+","%20",topics.value[i]),sep=","), paste0(topicslist,topics.value[i],sep=","))
@@ -257,7 +265,7 @@ find.topics.id<-function( value=NULL) {
 ck_topics<-function(topics.values){
   #' This function will makes sure a valid entity is given
   #' @param topics.values Topic IDs to validate
-  #'
+  #' @keywords internal
   notice<-NULL
   for(i in 1:length(topics.values)){
     if(!grepl("^\\d+$",topics.values[i])){

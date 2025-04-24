@@ -14,3 +14,4 @@ fmt_fields(url, fields)
 \description{
 Format fields for API request
 }
+\keyword{internal}

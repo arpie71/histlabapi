@@ -23,15 +23,15 @@
 #'
 #' @return Returns a json object (if run = TRUE) or API URL (if run=FALSE)
 #' @export
-
-
+#' @examples
+#' find.topics.id('nuclear') # nuclear topic ID is 78 in frus
+#' hlapi_topics(topics.value='78', coll.name='frus')
+#' find.topics.id('import') # topic ID 56 in WB
+#' find.topics.id('invest') # topic ID 51 in WB
+#' hlapi_topics(topics.value=c("51","56"), coll.name='worldbank', fields=c('doc_id','title','authored','topic_names'), or=FALSE)
+#'
 #require(jsonlite)
 #source('R/histlabapi_utils.R')
-# find.topics.id('nuclear') # nuclear topic ID is 78 in frus
-# hlapi_topics(topics.value='78', coll.name='frus')
-# find.topics.id('import') # topic ID 56 in WB
-# find.topics.id('invest') # topic ID 51 in WB
-# hlapi_topics(topics.value=c("51","56"), coll.name='worldbank', fields=c('doc_id','title','authored','topic_names'), or=FALSE)
 
 hlapi_topics<-function(topics.value=NULL, fields=NULL,coll.name=NULL,date=NULL,start.date=NULL,
                        end.date=NULL,or=TRUE, run=TRUE, limit = 25,...){

@@ -7,9 +7,22 @@
 ck_collections(collections)
 }
 \arguments{
-\item{collections}{List of collections to check
-Note: right now collections are hard-coded but will be moved to configuration file}
+\item{collections}{List of collections to check}
 }
 \description{
 This function checks to make sure that the collections listed are correct
 }
+\keyword{Note:}
+\keyword{are}
+\keyword{be}
+\keyword{but}
+\keyword{collections}
+\keyword{configuration}
+\keyword{file}
+\keyword{hard-coded}
+\keyword{internal}
+\keyword{moved}
+\keyword{now}
+\keyword{right}
+\keyword{to}
+\keyword{will}

@@ -12,3 +12,4 @@ ck_wikidata(entity.values)
 \description{
 This function will makes sure a valid entity is given
 }
+\keyword{internal}

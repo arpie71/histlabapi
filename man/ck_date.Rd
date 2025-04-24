@@ -14,3 +14,4 @@ ck_date(dates)
 This function checks that dates are correctly formatted
 And it converts dates to a standard format
 }
+\keyword{internal}

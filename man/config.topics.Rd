@@ -12,3 +12,4 @@ config.topics(topics.value)
 \description{
 This function configures the topics values to make it compatible with the API
 }
+\keyword{internal}

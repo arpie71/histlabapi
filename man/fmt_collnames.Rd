@@ -14,3 +14,4 @@ fmt_collnames(url, coll.name)
 \description{
 This function formats the collection names option when it is specified
 }
+\keyword{internal}

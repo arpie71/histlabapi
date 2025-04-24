@@ -12,3 +12,4 @@ config.ent(entity.value)
 \description{
 This function configures the entity values to make it compatible with the API
 }
+\keyword{internal}

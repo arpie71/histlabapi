@@ -14,3 +14,4 @@ ck_entities(url, entity.type)
 \description{
 This function will makes sure a valid entity is given
 }
+\keyword{internal}

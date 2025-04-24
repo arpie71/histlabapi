@@ -34,3 +34,9 @@ Returns a json object (if run = TRUE) or API URL (if run=FALSE)
 \description{
 This program allows a search of the History Lab API by entity.
 }
+\examples{
+find.entity.id('Belize') # Belize Wikidata ID is Q242
+hlapi_entity(entity.value='Q242', coll.name='frus')
+find.entity.id('Nixon') # RMN Wikidata ID is Q9588
+hlapi_entity(entity.value="Q9588", coll.name='frus')
+}

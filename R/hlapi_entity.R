@@ -21,14 +21,14 @@
 #'
 #' @return Returns a json object (if run = TRUE) or API URL (if run=FALSE)
 #' @export
-
+#' @examples
+#' find.entity.id('Belize') # Belize Wikidata ID is Q242
+#' hlapi_entity(entity.value='Q242', coll.name='frus')
+#' find.entity.id('Nixon') # RMN Wikidata ID is Q9588
+#' hlapi_entity(entity.value="Q9588", coll.name='frus')
 
 #require(jsonlite)
 #source('R/histlabapi_utils.R')
-# find.entity.id('Belize') # Belize Wikidata ID is Q242
-# hlapi_entity(entity.value='Q242', coll.name='frus')
-# find.entity.id('Nixon') # RMN Wikidata ID is Q9588
-# hlapi_entity(entity.value="Q9588", coll.name='frus')
 
 hlapi_entity<-function(entity.value=NULL, fields=NULL,coll.name=NULL,date=NULL,start.date=NULL,
                        end.date=NULL,or=FALSE, run=TRUE, limit = 25,...){

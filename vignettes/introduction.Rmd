@@ -1,0 +1,256 @@
+---
+title: "introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(histlabapi)
+```
+
+# R interface for History Lab API 
+
+This package for R offers a series of commands to use the History Lab API in order to download data from our collections. 
+
+## Collections
+
+The History Lab API has documents available from 11 different collections, as detailed below. The R functions will search across all collections, unless a specific collection or set of collections is specified. 
+
+|corpus|title|starts|ends|documents
+|----|----|----|----|----|
+|frus|Foreign Relations of the United States|1620|1989|311866|
+|cia|CIA CREST Collection|1941|2005|935716|
+|clinton|Clinton E-Mail|2009|2013|54149|
+|briefing|Presidential Daily Briefings|1946|1977|9680|
+|cfpf|State Department Central Foreign Policy Files|1973|1979|3214293|
+|kissinger|Kissinger Telephone Conversations|1973|1976|4552|
+|nato|NATO Archives|1949|2013|46002|
+|un|United Nations Archives|1997|2016|192541|
+|worldbank|World Bank McNamara Records|1942|2020|128254|
+|cabinet|UK Cabinet Papers|1907|1990|42539|
+|cpdoc|Azeredo da Silveira Papers|1973|1979|10279|
+
+## Fields
+The API can return many different fields which are described in the table below. By default, the API functions will only return _doc_id_, _authored_, and _title_. 
+
+|field|title|
+|----|----|
+|authored|Document date|
+|wikidata_ids|Wikidata IDs of entities in document|
+|entgroups|Entity types appearing in document|
+|entities|Standardized entity names in document|
+|topic_names|Top 5 tokens for each topic|
+|topic_scores|Topic score for each topic listed|
+|topic_ids|ID number for each topic (used to search by topic)|
+|title|Document title|
+|classification|Original classification of document (if known)|
+|corpus|Collection document is from|
+|doc_id|Unique document identifier|
+
+## Functions
+
+There are a number of functions in this package. 
+
+### hlapi_overview()
+This function provides an overview of the collections, topics, and entities across our documents. 
+
+#### Syntax
+ ``hlapi_overview(aspect=NULL,  sort = NULL,  coll.name=NULL, entity.type=NULL, limit=250, run=TRUE,...)``
+
+`aspect` is the type of overview to return. There are 3 acceptable values: collections, entities, and topics. 
+
+`sort` - only available with the entities aspect. If A is specified, entities will be returned in ascending order of appearance. If D is specified, entities will be returned in descending order of appearance.
+
+`coll.name` - name of the collection or collections to search. Multiple collections should be listed using R list notation (`c()`). Available collection names are: frus, cia, clinton, briefing, cfpf, kissinger, nato, un, worldbank, cabinet, cpdoc
+ 
+`entity.type` - Limit entity search to specific entity type or types. Acceptable values are PERSON, ORG, LOC, GOVT, OTHER.
+
+`limit` - Number of results to return. The default in all functions except hlapi_overview is 25 results. The maximum number of results that can be returned is 10,000. Please note that queries returning a larger number of documents may time out.
+
+
+#### Examples
+
+```{r overview_examples}
+# Show all topics in the FRUS collection: 
+hlapi_overview(aspect='topics',coll.name='frus')
+
+# Show summary data for all collections: 
+hlapi_overview(aspect='collections')
+
+# Return all LOC and PERSON entities in descending order of appearance: 
+hlapi_overview(aspect='entities', entity.type = c('PERSON','LOC'), sort = "A", limit=40)
+```
+
+### hlapi_id()
+This function will return data for a specific document ID or for a list of document IDs. Because document IDs are unique across all collections, documents can be returned from multiple collections. 
+
+This function will search the database for a document ID or list of documents IDs and return the resulting output. 
+
+#### Syntax
+``hlapi_id(ids=NULL, fields=NULL, run = TRUE,...)``
+
+`ids` - Document ID or list of document IDs to return. If an unknown ID is entered, the function will return nothing for the ID. 
+
+`fields` - name of database column or list of columns to return. Available field names are: authored, body, wikidata_ids, entgroups, entities, topic_names, topic_scores, topic_ids, title, classification, corpus, doc_id
+
+#### Examples
+
+```{r id_examples}
+# Return body and topics from specific FRUS document
+hlapi_id(ids='frus1969-76ve05p1d11', fields = c('doc_id','body','title','topic_names'))
+
+# Return specific fields for two different document IDs
+hlapi_id(ids=c('frus1969-76ve05p1d11','frus1958-60v03d47'), fields = c('doc_id','body','title','topic_names','entities'))
+```
+
+
+### hlapi_search()
+ This function performs a full-text search for a word or phrase across all collections or within specific collections. 
+
+#### Syntax
+``hlapi_search<-function(s.text, fields=NULL, or = FALSE, start.date=NULL,end.date=NULL, coll.name=NULL, limit = 25,run=TRUE,...)``
+
+`fields` - name of database column or list of columns to return. Available field names are: authored, body, wikidata_ids, entgroups, entities, topic_names, topic_scores, topic_ids, title, classification, corpus, doc_id
+
+`coll.name` - name of the collection or collections to search. Multiple collections should be listed using R list notation (`c()`). Available collection names are: frus, cia, clinton, briefing, cfpf, kissinger, nato, un, worldbank, cabinet, cpdoc.
+ 
+`start.date` - Used with the `end.date` option to restrict the documents retrieved to a certain date range. The start date specifies the initial date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
+ 
+`end.date` - Used with the `start.date` option to restrict the documents retrieved to a certain date range. The end date specifies the end date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
+ 
+ {p 4 4 2}The {cmd:date} and {cmd:start/end} parameters can used with the {it:date} option, or with the {it:entity}, {it:topic}, or {it:text} options in order to restrict the dates of the documents retrieved to a given day or to a range of dates.  Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.{p_end}
+
+ 
+`limit` - Number of results to return. The default in all functions except hlapi_overview is 25 results. The maximum number of results that can be returned is 10,000. Please note that queries returning a larger number of documents may time out.
+
+
+#### Examples
+```{r search_examples}
+
+# Search for documents containing either UDEAC or ASEAN
+hlapi_search(c('udeac','asean'),  or=TRUE,fields=c('doc_id','title','authored','topic_names'))
+
+# Search for phrase 'League of Nations' and return 5000 matching documents
+hlapi_search(c('league of nations'),  limit = 20, fields=c('doc_id','title'))
+
+# Search for phrase 'United Nations' in the CFPF and FRUS collections for the years 1974-1979
+hlapi_search('united nations', coll.name=c('cfpf','frus'),  start.date="1974-01-01", end.date="1979-12-31")
+
+```
+
+
+### hlapi_date()
+ Function to search the collections for documents appearing on a specific date or range of dates. 
+
+#### Syntax
+``hlapi_date(date=NULL,start.date=NULL,end.date=NULL,fields=NULL,coll.name=NULL,  limit = 25,run=TRUE,...)``
+
+
+`start.date` - Used with the `end.date` option to restrict the documents retrieved to a certain date range. The start date specifies the initial date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
+ 
+`end.date` - Used with the `start.date` option to restrict the documents retrieved to a certain date range. The end date specifies the end date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
+
+`coll.name` - name of the collection or collections to search. Multiple collections should be listed using R list notation (`c()`). Available collection names are: frus, cia, clinton, briefing, cfpf, kissinger, nato, un, worldbank, cabinet, cpdoc
+ 
+`fields` - name of database column or list of columns to return. Available field names are: authored, body, wikidata_ids, entgroups, entities, topic_names, topic_scores, topic_ids, title, classification, corpus, doc_id
+
+`limit` - Number of results to return. The default in all functions except hlapi_overview is 25 results. The maximum number of results that can be returned is 10,000. Please note that queries returning a larger number of documents may time out.
+
+
+#### Examples
+```{r date_examples}
+
+# Return all documents written on September 15, 1980
+hlapi_date(date='1980-09-15', fields=c("doc_id","classification","title"),coll.name="frus")
+
+# Return 10 documents written between January 1, 1947 and December 1, 1948
+hlapi_date(start.date='1947-01-01', end.date='12/01/1948', fields=c("doc_id","authored","title","topic_names") , limit=10)
+
+```
+
+### hlapi_entity()
+Function to search for entities across collection. (Note: the search requires Wikidata IDs)
+
+This function will search the database for a particular entity of group of entities. History Lab uses Wikidata IDs to identify entities within the data so the entity.value option must contain a Wikidata ID. 
+
+In order to find Wikidata IDs for entities in History Lab's databases, users can utilize the `find.entity.id` function. 
+
+#### Syntax
+``hlapi_entity(entity.value=NULL, fields=NULL,coll.name=NULL,date=NULL,start.date=NULL, end.date=NULL,or=FALSE, run=TRUE, limit = 25,...)``
+
+`entity.value` - required value. It specifies the Wikidata ID of the entity to search for. The `find.entity.id` function can be used to return a list of Wikidata IDs for an entity. 
+
+`fields` - name of database column or list of columns to return. Available field names are: authored, body, wikidata_ids, entgroups, entities,  topic_names, topic_scores, topic_ids, title, classification, corpus, doc_id
+
+`coll.name` - name of the collection or collections to search. Multiple collections should be listed using R list notation (`c()`). Available collection names are: frus, cia, clinton, briefing, cfpf, kissinger, nato, un, worldbank, cabinet, cpdoc
+ 
+`start.date` - Used with the `end.date` option to restrict the documents retrieved to a certain date range. The start date specifies the initial date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
+ 
+`end.date` - Used with the `start.date` option to restrict the documents retrieved to a certain date range. The end date specifies the end date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
+
+`limit` - Number of results to return. The default in all functions except hlapi_overview is 25 results. The maximum number of results that can be returned is 10,000. Please note that queries returning a larger number of documents may time out.
+
+
+#### Examples
+```{r entity_examples}
+# Find Wikidata ID for China: 
+#find.entity.id('China')
+
+# Find Wikidata ID for Henry Kissinger: 
+#find.entity.id('Kissinger')
+
+# Return 10 documents from FRUS and CFPF containing China: 
+hlapi_entity(entity.value=c('Q148'), coll.name='cfpf',fields = c('doc_id','authored','title','body'), limit=10)
+
+# Find documents from FRUS containing both China and Kissinger: 
+hlapi_entity(entity.value=c('Q148','Q66107'), coll.name='frus')
+
+```
+
+### hlapi_topics()
+Function to search for documents containing specific topics across collections. 
+
+The `find.topics.id` command will search for a given term and return a list of topics and topic IDs that contain the term. The topic IDs can then be used in the `hlapi_topics()` function. 
+
+#### Syntax
+``hlapi_topics(topics.value=NULL, fields=NULL,coll.name=NULL,date=NULL,start.date=NULL,end.date=NULL,or=TRUE, run=TRUE, limit = 25,...)``
+
+`topics.value` - required value which specifies the topic ID of the topic to search for. A list of topic IDs can be obtained using the `find.topics.id` function. 
+
+ `fields` - name of database column or list of columns to return. Available field names are: authored, body, wikidata_ids, entgroups, entities, topic_names, topic_scores, topic_ids, title, classification, corpus, doc_id
+
+`coll.name` - name of the collection or collections to search. Multiple collections should be listed using R list notation (`c()`). Available collection names are: frus, cia, clinton, briefing, cfpf, kissinger, nato, un, worldbank, cabinet, cpdoc
+
+`start.date` - Used with the `end.date` option to restrict the documents retrieved to a certain date range. The start date specifies the initial date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
+ 
+`end.date` - Used with the `start.date` option to restrict the documents retrieved to a certain date range. The end date specifies the end date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
+
+`limit` - Number of results to return. The default in all functions except hlapi_overview is 25 results. The maximum number of results that can be returned is 10,000. Please note that queries returning a larger number of documents may time out.
+
+
+#### Examples
+
+```{r topics_examples}
+# Find topics that include 'iraq'
+#find.topics.id('iraq')
+
+# Find documents from the UN collection with topics from topic ID 25 (which includes Iraq)
+hlapi_topics(topics.value='25', coll.name='un', fields=c('doc_id','title','authored','topic_names'))
+
+# Find topics that include 'soviet'
+#find.topics.id('soviet')
+
+# Find documents from the CIA collection with topic IDs 80, 102, 103
+hlapi_topics(topics.value=c('80','102','103'), coll.name='cia', fields=c('doc_id','title','authored','topic_names'), limit=10)
+
+```
