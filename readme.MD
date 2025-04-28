@@ -1,7 +1,7 @@
 
 # R interface for History Lab API 
 
-This package for R offers a series of commands to use the History Lab API in order to download data from our collections. 
+This package for R offers a series of commands to use the History Lab API in order to download data from our collections. For instuctions on how to use the commands, see the [Quick Start guide](quickstart.MD).
 
 ## Collections
 
