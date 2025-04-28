@@ -32,7 +32,7 @@
 
 hlapi_entity<-function(entity.value=NULL, fields=NULL,coll.name=NULL,date=NULL,start.date=NULL,
                        end.date=NULL,or=FALSE, run=TRUE, limit = 25,...){
-  url<-"http://api.foiarchive.org/"
+  url<-"https://api.foiarchive.org/"
   #search<-NULL
   if(missing(entity.value)){
     stop("Please supply an entity value")

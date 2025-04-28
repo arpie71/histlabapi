@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(histlabapi)
+
 ```
 
 # R interface for History Lab API 
@@ -120,17 +121,18 @@ hlapi_id(ids=c('frus1969-76ve05p1d11','frus1958-60v03d47'), fields = c('doc_id',
 #### Syntax
 ``hlapi_search<-function(s.text, fields=NULL, or = FALSE, start.date=NULL,end.date=NULL, coll.name=NULL, limit = 25,run=TRUE,...)``
 
+`s.text` - List of words or phrases to find using a full-text search.
+
 `fields` - name of database column or list of columns to return. Available field names are: authored, body, wikidata_ids, entgroups, entities, topic_names, topic_scores, topic_ids, title, classification, corpus, doc_id
 
-`coll.name` - name of the collection or collections to search. Multiple collections should be listed using R list notation (`c()`). Available collection names are: frus, cia, clinton, briefing, cfpf, kissinger, nato, un, worldbank, cabinet, cpdoc.
- 
+`or` - Specifies whether a search should be an "or" search or an "and" search. By default, the function will run an "and" search. To specify a "or" search, set the value of this option to TRUE.
+
 `start.date` - Used with the `end.date` option to restrict the documents retrieved to a certain date range. The start date specifies the initial date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
  
 `end.date` - Used with the `start.date` option to restrict the documents retrieved to a certain date range. The end date specifies the end date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
- 
- {p 4 4 2}The {cmd:date} and {cmd:start/end} parameters can used with the {it:date} option, or with the {it:entity}, {it:topic}, or {it:text} options in order to restrict the dates of the documents retrieved to a given day or to a range of dates.  Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.{p_end}
 
- 
+`coll.name` - name of the collection or collections to search. Multiple collections should be listed using R list notation (`c()`). Available collection names are: frus, cia, clinton, briefing, cfpf, kissinger, nato, un, worldbank, cabinet, cpdoc.
+
 `limit` - Number of results to return. The default in all functions except hlapi_overview is 25 results. The maximum number of results that can be returned is 10,000. Please note that queries returning a larger number of documents may time out.
 
 
@@ -155,15 +157,16 @@ hlapi_search('united nations', coll.name=c('cfpf','frus'),  start.date="1974-01-
 #### Syntax
 ``hlapi_date(date=NULL,start.date=NULL,end.date=NULL,fields=NULL,coll.name=NULL,  limit = 25,run=TRUE,...)``
 
+`date` - restrict the documents retrieved to a given date. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
 
 `start.date` - Used with the `end.date` option to restrict the documents retrieved to a certain date range. The start date specifies the initial date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
  
 `end.date` - Used with the `start.date` option to restrict the documents retrieved to a certain date range. The end date specifies the end date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
 
-`coll.name` - name of the collection or collections to search. Multiple collections should be listed using R list notation (`c()`). Available collection names are: frus, cia, clinton, briefing, cfpf, kissinger, nato, un, worldbank, cabinet, cpdoc
- 
 `fields` - name of database column or list of columns to return. Available field names are: authored, body, wikidata_ids, entgroups, entities, topic_names, topic_scores, topic_ids, title, classification, corpus, doc_id
 
+`coll.name` - name of the collection or collections to search. Multiple collections should be listed using R list notation (`c()`). Available collection names are: frus, cia, clinton, briefing, cfpf, kissinger, nato, un, worldbank, cabinet, cpdoc
+ 
 `limit` - Number of results to return. The default in all functions except hlapi_overview is 25 results. The maximum number of results that can be returned is 10,000. Please note that queries returning a larger number of documents may time out.
 
 
@@ -193,10 +196,14 @@ In order to find Wikidata IDs for entities in History Lab's databases, users can
 `fields` - name of database column or list of columns to return. Available field names are: authored, body, wikidata_ids, entgroups, entities,  topic_names, topic_scores, topic_ids, title, classification, corpus, doc_id
 
 `coll.name` - name of the collection or collections to search. Multiple collections should be listed using R list notation (`c()`). Available collection names are: frus, cia, clinton, briefing, cfpf, kissinger, nato, un, worldbank, cabinet, cpdoc
+
+`date` - restrict the documents retrieved to a given date. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
  
 `start.date` - Used with the `end.date` option to restrict the documents retrieved to a certain date range. The start date specifies the initial date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
  
 `end.date` - Used with the `start.date` option to restrict the documents retrieved to a certain date range. The end date specifies the end date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
+
+`or` - Specifies whether a search should be an "or" search or an "and" search. By default, the function will run an "and" search. To specify a "or" search, set the value of this option to TRUE.
 
 `limit` - Number of results to return. The default in all functions except hlapi_overview is 25 results. The maximum number of results that can be returned is 10,000. Please note that queries returning a larger number of documents may time out.
 
@@ -231,9 +238,13 @@ The `find.topics.id` command will search for a given term and return a list of t
 
 `coll.name` - name of the collection or collections to search. Multiple collections should be listed using R list notation (`c()`). Available collection names are: frus, cia, clinton, briefing, cfpf, kissinger, nato, un, worldbank, cabinet, cpdoc
 
+`date` - restrict the documents retrieved to a given date. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
+
 `start.date` - Used with the `end.date` option to restrict the documents retrieved to a certain date range. The start date specifies the initial date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
  
 `end.date` - Used with the `start.date` option to restrict the documents retrieved to a certain date range. The end date specifies the end date of a date range to be searched. Dates should be in numeric format and use either ".","-", or "/" as separators between month, day, and year. The function first looks for a "MDY" or a "YMD" format but it will recognize a "DMY" format for days greater than 12.
+
+`or` - Specifies whether a search should be an "or" search or an "and" search. By default, the function will run an "and" search. To specify a "or" search, set the value of this option to TRUE.
 
 `limit` - Number of results to return. The default in all functions except hlapi_overview is 25 results. The maximum number of results that can be returned is 10,000. Please note that queries returning a larger number of documents may time out.
 

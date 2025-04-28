@@ -29,7 +29,7 @@ hlapi_id<-function(ids=NULL, fields=NULL, run = TRUE,...) {
   if(is.null(ids)) stop("You selected the id option but provided no ids. Please list ids, separated by a comma.")
   ids<-gsub('\\s+','',ids)
 
-  url <- sprintf("http://api.foiarchive.org/documents?doc_id=in.(%s)", paste(ids, collapse = ','))
+  url <- sprintf("https://api.foiarchive.org/documents?doc_id=in.(%s)", paste(ids, collapse = ','))
   url<-fmt_fields(url,fields)
 
   if(run){

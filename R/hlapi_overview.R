@@ -33,7 +33,7 @@
 #source('R/histlabapi_utils.R')
 
 hlapi_overview<-function(aspect=NULL, sort = NULL,  coll.name=NULL, entity.type=NULL, limit=250, run=TRUE,...){
-  url<-"http://api.foiarchive.org/"
+  url<-"https://api.foiarchive.org/"
 
   if(aspect %ni% c("collections", "entities", "topics")){
     stop("Acceptable values are collections, entities, or topics")

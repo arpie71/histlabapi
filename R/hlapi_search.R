@@ -34,7 +34,7 @@
 #source('R/histlabapi_utils.R')
 
 hlapi_search<-function(s.text, fields=NULL, or = FALSE, start.date=NULL,end.date=NULL, coll.name=NULL, limit = 25,run=TRUE,...){
-  url<-"http://api.foiarchive.org/documents?"
+  url<-"https://api.foiarchive.org/documents?"
   search<-NULL
   notice<-NULL
   if(missing(s.text)){

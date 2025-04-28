@@ -35,7 +35,7 @@
 
 hlapi_topics<-function(topics.value=NULL, fields=NULL,coll.name=NULL,date=NULL,start.date=NULL,
                        end.date=NULL,or=TRUE, run=TRUE, limit = 25,...){
-  url<-"http://api.foiarchive.org/"
+  url<-"https://api.foiarchive.org/"
   #search<-NULL
   if(missing(topics.value)){
     stop("Please supply a topic value")

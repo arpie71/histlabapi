@@ -12,3 +12,4 @@ hlresults(url)
 \description{
 This function sends a request to the HL API
 }
+\keyword{internal}
